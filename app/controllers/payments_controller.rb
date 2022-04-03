@@ -4,12 +4,51 @@ require 'json'
 require 'openssl'
 require 'Base64'
 require 'securerandom'
+require 'paypal-sdk-rest'
 
 class PaymentsController < ApplicationController
   protect_from_forgery with: :null_session
-  def index
-    
+  include PayPal::SDK::REST
+  def index 
 
+  end
+
+  def paypal
+    redirect_url = ""
+    @payment = Payment.new({
+      :intent =>  "sale",
+      :payer =>  {
+        :payment_method =>  "paypal" },
+      :redirect_urls => {
+        :return_url => "http://localhost:3000/success",
+        :cancel_url => "http://localhost:3000/" },
+      :transactions =>  [{
+        :item_list => {
+          :items => [{
+            :name => "item",
+            :sku => "item",
+            :price => "5",
+            :currency => "USD",
+            :quantity => 1 }]},
+        :amount =>  {
+          :total =>  "5",
+          :currency =>  "USD" },
+        :description =>  "This is the payment transaction description." }]})
+    
+    if @payment.create
+      @redirect_url = @payment.links.find do |v|
+        v.rel == "approval_url"
+      end.href
+    end
+    #redirect_to redirect_url, allow_other_host: true
+  end
+
+  def paypal_template
+    paypal
+    redirect_to @redirect_url, allow_other_host: true
+  end
+
+  def momo
   #parameters send to MoMo get get payUrl
     endpoint = "https://test-payment.momo.vn/v2/gateway/api/create";
     partnerCode = Rails.application.credentials.config.dig(:momo, :partner_code)

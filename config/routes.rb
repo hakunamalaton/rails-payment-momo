@@ -3,5 +3,10 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "articles#index"
-  get "/payment", to: "payments#index"
+  get "/payment-momo", to: "payments#momo"
+  post "/payment-paypal", to: "payments#paypal"
+  get "/payment-paypal", to: "payments#paypal_template"
+
+  get "/", to: "payments#index"
+  get "/success", to: "payments#success"
 end
