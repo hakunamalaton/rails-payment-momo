@@ -14,4 +14,8 @@ development:
 
 production:
   <<: *default
-  mode: live
+  mode: sandbox
+  client_id: <%= Rails.application.credentials.config.dig(:paypal, :client_id) %>
+  client_secret: <%= Rails.application.credentials.config.dig(:paypal, :client_secret) %>
+  ssl_options:
+    ca_file: null
