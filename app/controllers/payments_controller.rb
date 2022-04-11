@@ -15,7 +15,7 @@ class PaymentsController < ApplicationController
 
   end
 
-  def paypal
+  def paypal(total)
     #redirect_url = ""
 
     @payment = Payment.new({
@@ -26,15 +26,8 @@ class PaymentsController < ApplicationController
         :return_url => "http://localhost:3000/success",
         :cancel_url => "http://localhost:3000/" },
       :transactions =>  [{
-        :item_list => {
-          :items => [{
-            :name => "item",
-            :sku => "item",
-            :price => "5",
-            :currency => "USD",
-            :quantity => 1 }]},
         :amount =>  {
-          :total =>  "5",
+          :total =>  total,
           :currency =>  "USD" },
         :description =>  "This is the payment transaction description." }]})
     
@@ -47,7 +40,7 @@ class PaymentsController < ApplicationController
   end
 
   def paypal_template
-    paypal
+    paypal(params[:total])
     redirect_to @redirect_url, allow_other_host: true
   end
 
