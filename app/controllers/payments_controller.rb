@@ -8,13 +8,16 @@ require 'paypal-sdk-rest'
 
 class PaymentsController < ApplicationController
   protect_from_forgery with: :null_session
+
   include PayPal::SDK::REST
+  
   def index 
 
   end
 
   def paypal
     redirect_url = ""
+
     @payment = Payment.new({
       :intent =>  "sale",
       :payer =>  {
@@ -36,17 +39,17 @@ class PaymentsController < ApplicationController
         :description =>  "This is the payment transaction description." }]})
     
     if @payment.create
-      @redirect_url = @payment.links.find do |v|
+      redirect_url = @payment.links.find do |v|
         v.rel == "approval_url"
       end.href
     end
-    #redirect_to redirect_url, allow_other_host: true
+    redirect_to redirect_url, allow_other_host: true
   end
 
-  def paypal_template
-    paypal
-    redirect_to @redirect_url, allow_other_host: true
-  end
+  # def paypal_template
+  #   paypal
+  #   redirect_to @redirect_url, allow_other_host: true
+  # end
 
   def momo
   #parameters send to MoMo get get payUrl

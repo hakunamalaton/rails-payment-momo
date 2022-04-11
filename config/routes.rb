@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   get "/payment-momo-confirm", to: "payments#confirm_payment"
   
   post "/payment-paypal", to: "payments#paypal"
-  get "/payment-paypal", to: "payments#paypal_template"
+  #get "/payment-paypal", to: "payments#paypal_template"
 
   get "/", to: "payments#index"
   get "/success", to: "payments#success"
