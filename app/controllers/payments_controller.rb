@@ -23,7 +23,7 @@ class PaymentsController < ApplicationController
       :payer =>  {
         :payment_method =>  "paypal" },
       :redirect_urls => {
-        :return_url => "http://localhost:3000/success",
+        :return_url => "http://localhost:3000/menu",
         :cancel_url => "http://localhost:3000/" },
       :transactions =>  [{
         :amount =>  {
@@ -112,8 +112,8 @@ class PaymentsController < ApplicationController
     #parameters send to MoMo get get payUrl
     endpoint = "https://test-payment.momo.vn/v2/gateway/api/query";
     partnerCode = Rails.application.credentials.config.dig(:momo, :partner_code)
+    orderId = "27e819ef-eed4-4a7f-bb80-41e90166a827"
     requestId = SecureRandom.uuid
-    orderId = SecureRandom.uuid
     accessKey = Rails.application.credentials.config.dig(:momo, :access_key)
     secretKey = Rails.application.credentials.config.dig(:momo, :secret_key)
     lang = "vi"
@@ -135,25 +135,7 @@ class PaymentsController < ApplicationController
       :lang => "vi",
       :signature => signature,
   }
-    #accessKey = Rails.application.credentials.config.dig(:momo, :access_key)
-    #secretKey = Rails.application.credentials.config.dig(:momo, :secret_key)
-    # orderInfo = "pay with MoMo"
-    # redirectUrl = "https://webhook.site/b3088a6a-2d17-4f8d-a383-71389a6c600b"
-    # ipnUrl = "https://webhook.site/b3088a6a-2d17-4f8d-a383-71389a6c600b"
-    # amount = "100000"
-    # requestType = "captureWallet"
-    # extraData = "" #pass empty value or Encode base64 JsonString
-
-    # #before sign HMAC SHA256 with format: accessKey=$accessKey&amount=$amount&extraData=$extraData&ipnUrl=$ipnUrl&orderId=$orderId&orderInfo=$orderInfo&partnerCode=$partnerCode&redirectUrl=$redirectUrl&requestId=$requestId&requestType=$requestType
-    # rawSignature = "accessKey="+accessKey+"&amount="+amount+"&extraData="+extraData+"&ipnUrl="+ipnUrl+"&orderId="+orderId+"&orderInfo="+orderInfo+"&partnerCode="+partnerCode+"&redirectUrl="+redirectUrl+"&requestId="+requestId+"&requestType="+requestType
-    # #puts raw signature
-    # puts "--------------------RAW SIGNATURE----------------"
-    # puts rawSignature
-    # #signature
-    # signature = OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha256'), secretKey, rawSignature)
-    # puts "--------------------SIGNATURE----------------"
-    # puts signature
-
+    
     #json object send to MoMo endpoint
     
     puts "--------------------JSON REQUEST----------------"
@@ -182,11 +164,12 @@ class PaymentsController < ApplicationController
     #parameters send to MoMo get get payUrl
     endpoint = "https://test-payment.momo.vn/v2/gateway/api/refund";
     partnerCode = Rails.application.credentials.config.dig(:momo, :partner_code)
+    orderId = SecureRandom.uuid
     requestId = SecureRandom.uuid
-    orderId = "d2e98606-81ba-466d-9b03-ddfa486e531f"
     amount = params[:amount]
     transId = "144492817"
     description = "hi"
+
     accessKey = Rails.application.credentials.config.dig(:momo, :access_key)
     secretKey = Rails.application.credentials.config.dig(:momo, :secret_key)
 
@@ -203,7 +186,7 @@ class PaymentsController < ApplicationController
     jsonRequestToMomo = {
       :partnerCode => partnerCode,
       :requestId => requestId,
-      :amount => amount,
+      :amount => amount.to_i,
       :orderId => orderId,
       :transId => transId,
       :description => description,
