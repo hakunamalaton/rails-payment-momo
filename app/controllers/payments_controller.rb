@@ -23,7 +23,7 @@ class PaymentsController < ApplicationController
       :payer =>  {
         :payment_method =>  "paypal" },
       :redirect_urls => {
-        :return_url => "http://localhost:3000/menu",
+        :return_url => "http://localhost:3000/menu/All",
         :cancel_url => "http://localhost:3000/" },
       :transactions =>  [{
         :amount =>  {
